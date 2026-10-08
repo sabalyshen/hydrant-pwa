@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <meta name="theme-color" content="#d32f2f">
+  <title>第三大隊水源地圖</title>
+  <link rel="manifest" href="manifest.json">
+  <link rel="apple-touch-icon" href="apple-touch-icon.png">
+  <link rel="icon" href="favicon.png">
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <!-- 地圖 -->
+  <div id="map"></div>
+
+  <!-- 頂部列 -->
+  <div id="header">
+    <h1>🚒 水源地圖</h1>
+    <div id="stats">載入中...</div>
+  </div>
+
+  <!-- 搜尋列 -->
+  <div id="search-bar">
+    <input type="text" id="search-input" placeholder="搜尋消防栓編號或位置..." />
+    <button id="search-btn">🔍</button>
+  </div>
+
+  <!-- 定位按鈕 -->
+  <button id="locate-btn" title="定位到我">📍</button>
+
+  <!-- 分隊篩選面板 -->
+  <button id="filter-toggle">🏷️ 分隊</button>
+  <div id="filter-panel">
+    <div id="filter-list"></div>
+  </div>
+
+  <!-- 圖例 -->
+  <div id="legend"></div>
+
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
