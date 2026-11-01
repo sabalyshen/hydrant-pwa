@@ -1,4 +1,4 @@
-const CACHE = 'hydrant-map-v2';
+const CACHE = 'hydrant-map-v3';
 const ASSETS = [
   './', './index.html', './tiles.js', './markers.js',
   './manifest.json', './icon-192.png', './icon-512.png', './icon-maskable-512.png'
@@ -22,19 +22,20 @@ self.addEventListener('activate', (e) => {
 
 self.addEventListener('fetch', (e) => {
   if (e.request.method !== 'GET') return;
-  // markers.js 用 network-first（離線時回退快取），其他用 cache-first
-  const isMarkers = e.request.url.endsWith('markers.js');
-  if (isMarkers) {
+  const isTiles = e.request.url.endsWith('tiles.js');
+  if (isTiles) {
+    // 圖磚 13.5MB 固定 → cache-first，不重下載
     e.respondWith(
-      fetch(e.request).then((resp) => {
-        const clone = resp.clone();
-        caches.open(CACHE).then((c) => c.put(e.request, clone));
-        return resp;
-      }).catch(() => caches.match(e.request))
+      caches.match(e.request).then((cached) => cached || fetch(e.request).catch(() => cached))
     );
     return;
   }
+  // 其餘（index.html / markers.js / manifest / icons）→ network-first：有網抓最新（UI 改動立刻生效），離線回退快取
   e.respondWith(
-    caches.match(e.request).then((cached) => cached || fetch(e.request).catch(() => cached))
+    fetch(e.request).then((resp) => {
+      const clone = resp.clone();
+      caches.open(CACHE).then((c) => c.put(e.request, clone));
+      return resp;
+    }).catch(() => caches.match(e.request))
   );
 });
