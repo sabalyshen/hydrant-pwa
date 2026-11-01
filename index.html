@@ -690,7 +690,7 @@ html,body{margin:0;height:100%;font-family:'Microsoft JhengHei',sans-serif;}
 .li{display:flex;align-items:center;gap:8px;margin:2px 0;}
 .sw{width:16px;height:16px;flex:0 0 16px;display:inline-flex;align-items:center;justify-content:center;border-radius:2px;}
 .sw svg{width:14px;height:14px;}
-.nav-link{display:inline-block;margin-top:6px;padding:6px 10px;background:#d32f2f;color:#fff;border-radius:6px;text-decoration:none;font-size:13px;}
+.nav-link{display:inline-block;margin-top:6px;padding:6px 10px;background:#6b7280;color:#fff;border-radius:6px;text-decoration:none;font-size:13px;}
 </style>
 </head>
 <body>
@@ -735,7 +735,7 @@ function shapeLabel(s){
 }
 function buildPopup(p){
   var navUrl = 'https://www.google.com/maps/dir/?api=1&destination=' + p.lat + ',' + p.lng + '&travelmode=driving';
-  var t = '<b>消防栓 ' + p.hid + '</b><br>分隊: ' + p.unit + '<br>';
+  var t = '<b>消防栓 ' + p.hid + (p.shape === 'cross' ? ' (報修)' : '') + '</b><br>分隊: ' + p.unit + '<br>';
   if (p.location) t += '位置: ' + p.location + '<br>';
   t += '出水量: ' + (p.meter != null ? p.meter : '-') + '（' + shapeLabel(p.shape) + '）<br>';
   t += '<a class="nav-link" href="' + navUrl + '" target="_blank">🧭 Google 導航</a>';
