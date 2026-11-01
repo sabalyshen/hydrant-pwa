@@ -1,32 +1,17 @@
 {
-  "name": "第三大隊水源地圖",
-  "short_name": "水源地圖",
-  "description": "消防水源地圖 — 查詢附近消防栓位置",
+  "name": "第三大隊消防栓地圖",
+  "short_name": "消防栓地圖",
+  "description": "消防栓離線地圖 — 單位分顏色、出水量分形狀",
   "lang": "zh-TW",
   "start_url": "./",
   "scope": "./",
   "display": "standalone",
   "orientation": "portrait",
-  "background_color": "#1a1a1a",
+  "background_color": "#0f172a",
   "theme_color": "#d32f2f",
   "icons": [
-    {
-      "src": "icon-192.png",
-      "sizes": "192x192",
-      "type": "image/png",
-      "purpose": "any"
-    },
-    {
-      "src": "icon-512.png",
-      "sizes": "512x512",
-      "type": "image/png",
-      "purpose": "any"
-    },
-    {
-      "src": "icon-maskable-512.png",
-      "sizes": "512x512",
-      "type": "image/png",
-      "purpose": "maskable"
-    }
+    { "src": "icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
+    { "src": "icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" },
+    { "src": "icon-maskable-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
   ]
 }
