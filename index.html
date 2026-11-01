@@ -729,9 +729,9 @@ new OfflineTiles({minZoom:10, maxZoom:15, tileSize:256}).addTo(map);
 
 var markers = [];
 var currentFilter = new Set();
-var SHAPES = {"triangle": "<polygon points=\"0,-8 7.5,6.5 -7.5,6.5\" />", "circle": "<circle cx=\"0\" cy=\"0\" r=\"7\" />", "square": "<rect x=\"-6.5\" y=\"-6.5\" width=\"13\" height=\"13\" />", "pentagon": "<polygon points=\"0,-8 7.6,-2.4 4.7,6.5 -4.7,6.5 -7.6,-2.4\" />", "star": "<polygon points=\"0,-9 2.1,-2.8 8.6,-2.8 3.4,1.1 5.4,7.4 0,3.6 -5.4,7.4 -3.4,1.1 -8.6,-2.8 -2.1,-2.8\" />"};
+var SHAPES = {"triangle": "<polygon points=\"0,-8 7.5,6.5 -7.5,6.5\" />", "circle": "<circle cx=\"0\" cy=\"0\" r=\"7\" />", "square": "<rect x=\"-6.5\" y=\"-6.5\" width=\"13\" height=\"13\" />", "pentagon": "<polygon points=\"0,-8 7.6,-2.4 4.7,6.5 -4.7,6.5 -7.6,-2.4\" />", "star": "<polygon points=\"0,-9 2.1,-2.8 8.6,-2.8 3.4,1.1 5.4,7.4 0,3.6 -5.4,7.4 -3.4,1.1 -8.6,-2.8 -2.1,-2.8\" />", "cross": "<path d=\"M-6.5,-6.5 L6.5,6.5 M6.5,-6.5 L-6.5,6.5\" stroke=\"#ff3b30\" stroke-width=\"3.5\" stroke-linecap=\"round\" fill=\"none\" />"};
 function shapeLabel(s){
-  return {'triangle':'三角形 (<360)','circle':'圓形 (360~720)','square':'正方形 (720~1080)','pentagon':'五角形 (1080~1440)','star':'星星 (≥1440)'}[s] || s;
+  return {'triangle':'三角形 (<360)','circle':'圓形 (360~720)','square':'正方形 (720~1080)','pentagon':'五角形 (1080~1440)','star':'星星 (≥1440)','cross':'X（報修中）'}[s] || s;
 }
 function buildPopup(p){
   var navUrl = 'https://www.google.com/maps/dir/?api=1&destination=' + p.lat + ',' + p.lng + '&travelmode=driving';
@@ -784,7 +784,7 @@ function buildLegend(){
     var c = (data.find(function(p){ return p.unit === x; }) || {}).color || '#999';
     u += '<div class="li"><span class="sw" style="background:' + c + '"></span>' + x + '</div>';
   });
-  var shapes = ['triangle','circle','square','pentagon','star'];
+  var shapes = ['triangle','circle','square','pentagon','star','cross'];
   var s = '<h4>出水量（形狀）</h4>';
   shapes.forEach(function(sh){
     s += '<div class="li"><span class="sw">' + SHAPES[sh] + '</span>' + shapeLabel(sh) + '</div>';
