@@ -716,8 +716,16 @@ var units = [];
 data.forEach(function(p){ if (units.indexOf(p.unit) < 0) units.push(p.unit); });
 units.sort();
 var map = L.map('map').setView([24.107, 120.680], 13);
-L.tileLayer(function(c){ return tileData[c.z + '/' + c.x + '/' + c.y] || ''; },
-  {minZoom:10, maxZoom:15, tileSize:256}).addTo(map);
+var OfflineTiles = L.GridLayer.extend({
+  createTile: function(coords) {
+    var tile = document.createElement('img');
+    tile.src = tileData[coords.z + '/' + coords.x + '/' + coords.y] || '';
+    tile.alt = '';
+    tile.style.width = tile.style.height = '100%';
+    return tile;
+  }
+});
+new OfflineTiles({minZoom:10, maxZoom:15, tileSize:256}).addTo(map);
 
 var markers = [];
 var currentFilter = new Set();
