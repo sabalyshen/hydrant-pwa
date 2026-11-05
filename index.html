@@ -680,6 +680,7 @@ html,body{margin:0;height:100%;font-family:'Microsoft JhengHei',sans-serif;}
 #search-input{flex:1;padding:9px 12px;border-radius:8px;border:1px solid #334155;background:#0f172a;color:#e2e8f0;font-size:14px;}
 #search-btn{padding:9px 14px;border:none;border-radius:8px;background:#d32f2f;color:#fff;font-size:14px;cursor:pointer;}
 #locate-btn{position:absolute;right:12px;bottom:120px;z-index:1000;width:46px;height:46px;border-radius:50%;border:none;background:#0f172a;color:#fff;font-size:22px;cursor:pointer;box-shadow:0 2px 6px rgba(0,0,0,.4);}
+#hd-btn{position:absolute;right:12px;bottom:176px;z-index:1000;padding:11px 14px;border-radius:8px;border:none;background:#0f172a;color:#fff;font-size:14px;cursor:pointer;box-shadow:0 2px 6px rgba(0,0,0,.4);}
 #filter-toggle{position:absolute;left:12px;bottom:120px;z-index:1000;padding:11px 14px;border-radius:8px;border:none;background:#0f172a;color:#fff;font-size:14px;cursor:pointer;box-shadow:0 2px 6px rgba(0,0,0,.4);}
 #filter-panel{position:absolute;left:12px;bottom:168px;z-index:1000;background:rgba(15,23,42,.95);color:#e2e8f0;border-radius:8px;padding:10px;display:none;max-height:50vh;overflow:auto;}
 #filter-panel.show{display:block;}
@@ -698,6 +699,7 @@ html,body{margin:0;height:100%;font-family:'Microsoft JhengHei',sans-serif;}
 <div id="header"><h1>🚒 消防栓地圖</h1><div id="stats">載入中...</div></div>
 <div id="search-bar"><input type="text" id="search-input" placeholder="搜尋編號或位置..."><button id="search-btn">🔍</button></div>
 <button id="locate-btn">📍</button>
+<button id="hd-btn">🔍 高精度</button>
 <button id="filter-toggle">🏷️ 分隊</button>
 <div id="filter-panel"><div id="filter-list"></div></div>
 <div id="legend"></div>
@@ -715,7 +717,9 @@ var tileData = TILE_DATA;
 var units = [];
 data.forEach(function(p){ if (units.indexOf(p.unit) < 0) units.push(p.unit); });
 units.sort();
-var map = L.map('map').setView([24.107, 120.680], 13);
+var map = L.map('map', {maxZoom: 19}).setView([24.107, 120.680], 13);
+var OFFLINE_MAX = 16;   // 內嵌離線圖磚最細到 z16
+var MAP_MAX = 19;               // 高精度模式可放大到 z19
 var OfflineTiles = L.GridLayer.extend({
   createTile: function(coords) {
     var tile = document.createElement('img');
@@ -725,7 +729,27 @@ var OfflineTiles = L.GridLayer.extend({
     return tile;
   }
 });
-new OfflineTiles({minZoom:10, maxZoom:16, tileSize:256}).addTo(map);
+var offlineLayer = new OfflineTiles({minZoom:10, maxZoom:OFFLINE_MAX, tileSize:256}).addTo(map);
+var onlineTiles = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+  minZoom: 10, maxZoom: MAP_MAX, tileSize: 256,
+  attribution: '&copy; OpenStreetMap'
+});
+var hdMode = false;
+function setHD(on) {
+  hdMode = !!on;
+  var b = document.getElementById('hd-btn');
+  if (hdMode) {
+    if (map.hasLayer(offlineLayer)) map.removeLayer(offlineLayer);
+    if (!map.hasLayer(onlineTiles)) onlineTiles.addTo(map);
+    map.setMaxZoom(MAP_MAX);
+  } else {
+    if (map.hasLayer(onlineTiles)) map.removeLayer(onlineTiles);
+    if (!map.hasLayer(offlineLayer)) offlineLayer.addTo(map);
+    map.setMaxZoom(OFFLINE_MAX);
+    if (map.getZoom() > OFFLINE_MAX) map.setZoom(OFFLINE_MAX, {animate: false});
+  }
+  if (b) { b.style.background = hdMode ? '#d32f2f' : '#0f172a'; b.textContent = hdMode ? '🔍 高精度（開）' : '🔍 高精度'; }
+}
 
 var markers = [];
 var currentFilter = new Set();
@@ -831,10 +855,12 @@ function locateMe(){
       .addTo(map).bindPopup('我的位置').openPopup();
   }, function(err){ alert('定位失敗: ' + err.message); }, {enableHighAccuracy:true});
 }
+setHD(false);   // 預設離線模式（maxZoom = OFFLINE_MAX）
 buildFilterPanel(); buildLegend(); renderMarkers();
 document.getElementById('search-btn').addEventListener('click', doSearch);
 document.getElementById('search-input').addEventListener('keypress', function(e){ if (e.key === 'Enter') doSearch(); });
 document.getElementById('locate-btn').addEventListener('click', locateMe);
+document.getElementById('hd-btn').addEventListener('click', function(){ setHD(!hdMode); });
 document.getElementById('filter-toggle').addEventListener('click', function(){ document.getElementById('filter-panel').classList.toggle('show'); });
 if ('serviceWorker' in navigator){ navigator.serviceWorker.register('service-worker.js').catch(function(){}); }
 </script>
