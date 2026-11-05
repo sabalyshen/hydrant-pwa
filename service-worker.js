@@ -1,4 +1,4 @@
-const CACHE = 'hydrant-map-v4';
+const CACHE = 'hydrant-map-v5';
 // 只預先快取小檔案（安裝快、可靠）；tiles.js 13.5MB 改為首次使用才下載快取，避免 addAll 失敗卡住安裝
 const PRECACHE = ['./', './index.html', './markers.js', './manifest.json', './icon-192.png', './icon-512.png', './icon-maskable-512.png'];
 
